@@ -12,7 +12,7 @@ public class BackupWorker implements Runnable {
 	@Override
 	public void run() {
 		plugin.renderInProgress = true;
-		plugin.log.info("Backup started");
+		plugin.dbgOut("Backup started");
 		
 		//TODO: Replace dummy backup routine.
 		try {
@@ -22,8 +22,9 @@ public class BackupWorker implements Runnable {
 			e.printStackTrace();
 		}
 		
-		plugin.log.info("Backup ended");
-		plugin.getServer().getPluginManager().callEvent(new BackupFinishedEvent());
+		// Send event to show our backup is done
+		plugin.getServer().getPluginManager().callEvent(new BackupFinishedEvent("BackupFinishedEvent"));
+		plugin.dbgOut("Backup ended");
 	}
 
 }

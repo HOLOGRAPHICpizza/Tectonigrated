@@ -14,8 +14,8 @@ public class RenderTask implements Runnable {
 	
 	@Override
 	public void run() {
-		plugin.log.info("Rendering teh map lulz");
-		plugin.log.info("Btw bro, this thread blocks.");
+		plugin.dbgOut("Rendering teh map lulz");
+		plugin.dbgOut("Btw bro, this thread blocks.");
 		
 		Thread bw = new Thread(backupWorker);
 		bw.start();

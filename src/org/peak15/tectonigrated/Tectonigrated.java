@@ -7,18 +7,22 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
 
 public class Tectonigrated extends JavaPlugin {
-	public Logger log = Logger.getLogger("Minecraft");
+	// Enable debug messages.
+	public static final boolean DEBUG = true;
 	
 	public boolean renderInProgress = false;
 	
 	private Configuration config;
 	private RenderTask renderTask = new RenderTask(this);
 	private final TICustomEventListener tICustomEventListener = new TICustomEventListener(this);
+	private PluginDescriptionFile pdfFile;
+	private Logger log = Logger.getLogger("Minecraft");
 	
 	// User defined variables:
 	
@@ -35,6 +39,8 @@ public class Tectonigrated extends JavaPlugin {
 	public int currentBackupCount;	// Default: 1
 	
 	public void onEnable() {
+		pdfFile = this.getDescription();
+		
 		// Load configuration
 		config = getConfiguration();
 		runPeriodMins = config.getInt("runPeriodMins", 720);
@@ -52,8 +58,8 @@ public class Tectonigrated extends JavaPlugin {
 		//this.getServer().getScheduler().scheduleSyncRepeatingTask(this, renderTask, period, period);
 		
 		// Show enabled message
-		log.info("Tectonigrated enabled.");
-		log.info(runPeriodMins + " " + numBackups + " " + backupPath);
+		infoLog("Version " + pdfFile.getVersion() + " enabled.");
+		dbgOut(runPeriodMins + " " + numBackups + " " + backupPath);
 	}
 	
 	// Render the map on command.
@@ -68,7 +74,7 @@ public class Tectonigrated extends JavaPlugin {
 				senderName = "Console";
 			}
 			
-			log.info("Tectonigrated: " + senderName + " has requested a map render.");
+			infoLog(senderName + " has requested a map render.");
 			
 			if(!renderInProgress) {
 				Thread rtt = new Thread(renderTask);
@@ -76,7 +82,7 @@ public class Tectonigrated extends JavaPlugin {
 				return true;
 			}
 			else {
-				log.warning("Tectonicus: A render was attempted while another was in progres.");
+				warnLog("A render was attempted while another was in progres.");
 				sender.sendMessage(ChatColor.RED + "A render is already in progress.");
 				return true;
 			}
@@ -84,7 +90,41 @@ public class Tectonigrated extends JavaPlugin {
 		return false;
 	}
 	
+	/**
+	 * Logs a message at level INFO.
+	 * @param msg Message to log.
+	 */
+	public void infoLog(String msg) {
+		log.info(pdfFile.getName() + ": " + msg);
+	}
+	
+	/**
+	 * Logs a message at level WARNING.
+	 * @param msg Message to log.
+	 */
+	public void warnLog(String msg) {
+		log.warning(pdfFile.getName() + ": " + msg);
+	}
+	
+	/**
+	 * Logs an error message at level SEVERE.
+	 * @param msg Message to log.
+	 */
+	public void errLog(String msg) {
+		log.severe(pdfFile.getName() + ": " + msg);
+	}
+	
+	/**
+	 * Prints a debug message if DEBUG is true.
+	 * @param msg Debug message to print.
+	 */
+	public void dbgOut(String msg) {
+		if(DEBUG) {
+			log.warning("DEBUG: " + msg);
+		}
+	}
+	
 	public void onDisable() {
-		log.info("Tectonigrated disabled.");
+		infoLog("Disabled.");
 	}
 }
