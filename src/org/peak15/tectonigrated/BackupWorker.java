@@ -4,6 +4,8 @@ package org.peak15.tectonigrated;
 
 import java.io.*;
 
+import org.bukkit.ChatColor;
+
 public class BackupWorker implements Runnable {
 	private Tectonigrated plugin; // Refrence to the main plugin class.
 	
@@ -15,7 +17,25 @@ public class BackupWorker implements Runnable {
 	public void run() {
 		plugin.logCast("Backup started...");
 		
-		
+		// Backup the worlds
+		for(String world : plugin.renderMaps) {
+			File src = new File(world);
+			File dest = new File(plugin.backupPath, Integer.toString(plugin.currentBackupCount) + File.separator + world);
+			try {
+				dest.mkdirs();
+				copyDirectory(src, dest);
+				
+			} catch (IOException e) {
+				String msg = "Failed to backup world, aborting render.";
+				plugin.errLog(msg);
+				plugin.broadcast(ChatColor.RED + msg);
+				e.printStackTrace();
+				
+				// Send event to show our backup failed
+				plugin.getServer().getPluginManager().callEvent(new BackupFailedEvent("BackupFailedEvent"));
+				return;
+			}
+		}
 		
 		// Send event to show our backup is done
 		plugin.getServer().getPluginManager().callEvent(new BackupFinishedEvent("BackupFinishedEvent"));
@@ -27,14 +47,11 @@ public class BackupWorker implements Runnable {
 	 * @author Aditya
 	 * 
 	 * @param sourceLocation Location to copy from.
-	 * @param targetLocation Location to copy to. Will be created if it does not exist.
+	 * @param targetLocation Location to copy to.
 	 * @throws IOException
 	 */
 	public void copyDirectory(File sourceLocation , File targetLocation) throws IOException {
 		if (sourceLocation.isDirectory()) {
-			if (!targetLocation.exists()) {
-				targetLocation.mkdir();
-			}
 			
 			String[] children = sourceLocation.list();
 			for (int i=0; i<children.length; i++) {
@@ -42,6 +59,12 @@ public class BackupWorker implements Runnable {
 			}
 		} else {
 			InputStream in = new FileInputStream(sourceLocation);
+			
+			File outDir = targetLocation.getParentFile();
+			if(!outDir.exists()) {
+				outDir.mkdirs();
+			}
+			
 			OutputStream out = new FileOutputStream(targetLocation);
 			
 			// Copy the bits from instream to outstream

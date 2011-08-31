@@ -19,6 +19,8 @@ public class TectonicusWorker implements Runnable {
 			e.printStackTrace();
 		}
 		
+		//TODO: remove old backups to conform with numBackups
+		
 		plugin.logCast("Render complete.");
 		if(!plugin.broadcastMessage.equals("")) {
 			plugin.logCast(plugin.broadcastMessage);

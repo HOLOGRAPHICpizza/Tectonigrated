@@ -28,5 +28,12 @@ public class TICustomEventListener extends CustomEventListener implements Listen
 			Thread tw = new Thread(tectonicusWorker);
 			tw.start();
 		}
+		else if(event instanceof BackupFailedEvent) {
+			// enable level saving
+			ConsoleCommandSender sender = new ConsoleCommandSender(plugin.getServer());
+			plugin.getServer().dispatchCommand(sender, "save-on");
+			
+			plugin.renderInProgress = false;
+		}
 	}
 }
