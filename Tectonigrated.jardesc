@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="WINDOWS-1252" standalone="no"?>
+<jardesc>
+    <jar path="E:/minecraft_server/plugins/Tectonigrated.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/Tectonigrated/Tectonigrated.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="true" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+    <selectedProjects/>
+    <manifest generateManifest="false" manifestLocation="/Tectonigrated/manifest.txt" manifestVersion="1.0" reuseManifest="true" saveManifest="true" usesManifest="true">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
+        <file path="/Tectonigrated/.project"/>
+        <javaElement handleIdentifier="=Tectonigrated/src"/>
+        <file path="/Tectonigrated/.classpath"/>
+        <file path="/Tectonigrated/.gitignore"/>
+        <file path="/Tectonigrated/plugin.yml"/>
+    </selectedElements>
+</jardesc>

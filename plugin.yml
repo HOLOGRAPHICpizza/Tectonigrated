@@ -1,0 +1,5 @@
+name: Tectonigrated
+main: org.peak15.tectonigrated.Tectonigrated
+version: 0.1
+description: >
+             Tectonicus integration for Bukkit.
