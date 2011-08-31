@@ -12,13 +12,10 @@ public class TectonicusWorker implements Runnable {
 
 	@Override
 	public void run() {
-		plugin.logCast("Rendering map with Tectonicus...");
-		
 		//TODO: Replace dummy render routine.
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

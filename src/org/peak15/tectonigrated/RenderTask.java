@@ -2,6 +2,8 @@
 
 package org.peak15.tectonigrated;
 
+import org.bukkit.command.ConsoleCommandSender;
+
 public class RenderTask implements Runnable {
 	private Tectonigrated plugin; // Refrence to the main plugin class.
 	
@@ -14,13 +16,20 @@ public class RenderTask implements Runnable {
 	
 	@Override
 	public void run() {
+		if(plugin.renderInProgress) {
+			plugin.warnLog("A render was attempted while another was in progres.");
+			return;
+		}
+		
 		plugin.renderInProgress = true;
 		
-		//TODO: Get actual backup count.
-		int backupCount = 1337;
+		int backupCount = plugin.allocRenderNumber();
 		plugin.logCast("Render number " + backupCount + " started.");
 		
-		//TODO: save all and disable level saving
+		// save all and disable level saving
+		ConsoleCommandSender sender = new ConsoleCommandSender(plugin.getServer());
+		plugin.getServer().dispatchCommand(sender, "save-all");
+		plugin.getServer().dispatchCommand(sender, "save-off");
 		
 		Thread bw = new Thread(backupWorker);
 		bw.start();

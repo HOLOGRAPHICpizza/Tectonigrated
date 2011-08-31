@@ -1,5 +1,7 @@
 package org.peak15.tectonigrated;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
@@ -11,7 +13,6 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
-
 public class Tectonigrated extends JavaPlugin {
 	// Enable debug messages.
 	public static final boolean DEBUG = true;
@@ -28,7 +29,7 @@ public class Tectonigrated extends JavaPlugin {
 	// User defined variables:
 	
 	// Period in minutes between automatic runs of Tectonigrated. 0 disables auto-runs.
-	public int runPeriodMins;	// Default: 720 mins (12 hrs)
+	public int runPeriodMins;		// Default: 720 mins (12 hrs)
 	
 	// Number of backups to keep. -1 keeps all backups.
 	public int numBackups;			// Default: 0
@@ -37,10 +38,13 @@ public class Tectonigrated extends JavaPlugin {
 	public String backupPath;		// Default: plugins/Tectonigrated/backups
 	
 	// Message to broadcast when render is complete. "" sends no message.
-	public String broadcastMessage;		// Default: ""
+	public String broadcastMessage;	// Default: ""
 	
 	// Current backup number, should not be changed by user.
-	public int currentBackupCount;	// Default: 1
+	public int currentBackupCount;	// Default: 0
+	
+	// List of maps to render.
+	public List<String> renderMaps;	// Default: ["world"]
 	
 	public void onEnable() {
 		pdfFile = this.getDescription();
@@ -48,11 +52,20 @@ public class Tectonigrated extends JavaPlugin {
 		
 		// Load configuration
 		config = getConfiguration();
+		config.load();
+		
 		runPeriodMins = config.getInt("runPeriodMins", 720);
 		numBackups = config.getInt("numBackups", 0);
 		backupPath = config.getString("backupPath", "plugins/" + pluginName + "/backups");
 		broadcastMessage = config.getString("broadcastMessage", "");
-		currentBackupCount = config.getInt("currentBackupCount", 1);
+		currentBackupCount = config.getInt("currentBackupCount", 0);
+		
+		List<String> rMaps = new ArrayList<String>();
+		rMaps.add("world");
+		rMaps.add("world_nether");
+		renderMaps = config.getStringList("renderMaps", rMaps);
+		
+		config.setProperty("renderMaps", renderMaps);
 		config.save();
 		
 		// Catch custom events
@@ -72,6 +85,11 @@ public class Tectonigrated extends JavaPlugin {
 	//TODO: onCommand seems deprecated, should be updated to use getCommand.
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {	
 		if(cmd.getName().equalsIgnoreCase("rendermap")){
+			if(!sender.hasPermission("tectonigrated.render")) {
+				sender.sendMessage(ChatColor.RED + "You do not have permission to render the map.");
+				return true;
+			}
+			
 			String senderName;
 			if(sender instanceof Player) {
 				senderName = ( (Player) sender ).getName();
@@ -97,11 +115,26 @@ public class Tectonigrated extends JavaPlugin {
 	}
 	
 	/**
+	 * Allocates a render number for a new render.
+	 * Increments and returns currentBackupCount.
+	 * @return Render number.
+	 */
+	public int allocRenderNumber() {
+		++currentBackupCount;
+		
+		config = getConfiguration();
+		config.setProperty("currentBackupCount", currentBackupCount);
+		config.save();
+		
+		return currentBackupCount;
+	}
+	
+	/**
 	 * Broadcasts a message to all players.
 	 * @param msg Message to broadcast.
 	 */
 	public void broadcast(String msg) {
-		this.getServer().broadcastMessage(pluginName + ": " + msg);
+		this.getServer().broadcastMessage(ChatColor.BLUE + pluginName + ": " + ChatColor.WHITE + msg);
 	}
 	
 	/**
