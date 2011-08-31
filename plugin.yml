@@ -1,5 +1,15 @@
 name: Tectonigrated
 main: org.peak15.tectonigrated.Tectonigrated
 version: 0.1
+author: HOLOGRAPHICpizza
 description: >
              Tectonicus integration for Bukkit.
+commands:
+  rendermap:
+    description: Causes Tectonigrated to render the map.
+    usage: |
+           /<command>
+permissions:
+  tectonigrated.render:
+    description: Allows the plater to render the map with Tectonigrated
+    default: op
