@@ -14,7 +14,7 @@
         <file path="/Tectonigrated/.project"/>
         <javaElement handleIdentifier="=Tectonigrated/src"/>
         <file path="/Tectonigrated/.classpath"/>
-        <file path="/Tectonigrated/plugin.yml"/>
         <file path="/Tectonigrated/.gitignore"/>
+        <file path="/Tectonigrated/plugin.yml"/>
     </selectedElements>
 </jardesc>

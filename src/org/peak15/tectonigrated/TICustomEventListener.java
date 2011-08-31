@@ -7,12 +7,21 @@ import org.bukkit.event.Listener;
 public class TICustomEventListener extends CustomEventListener implements Listener {
 	private Tectonigrated plugin; // Refrence to the main plugin class.
 	
+	private TectonicusWorker tectonicusWorker;
+	
 	public TICustomEventListener(Tectonigrated instance) {
 		plugin = instance;
+		tectonicusWorker = new TectonicusWorker(plugin);
 	}
 	
 	@Override
 	public void onCustomEvent(Event event) {
-		plugin.dbgOut(event.toString());
+		if(event instanceof BackupFinishedEvent) {
+			//TODO: enable level saving
+			
+			// Now we can render! :D
+			Thread tw = new Thread(tectonicusWorker);
+			tw.start();
+		}
 	}
 }

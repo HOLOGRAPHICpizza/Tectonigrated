@@ -22,6 +22,7 @@ public class Tectonigrated extends JavaPlugin {
 	private RenderTask renderTask = new RenderTask(this);
 	private final TICustomEventListener tICustomEventListener = new TICustomEventListener(this);
 	private PluginDescriptionFile pdfFile;
+	public String pluginName;
 	private Logger log = Logger.getLogger("Minecraft");
 	
 	// User defined variables:
@@ -35,17 +36,22 @@ public class Tectonigrated extends JavaPlugin {
 	// Path to save backups to.
 	public String backupPath;		// Default: plugins/Tectonigrated/backups
 	
+	// Message to broadcast when render is complete. "" sends no message.
+	public String broadcastMessage;		// Default: ""
+	
 	// Current backup number, should not be changed by user.
 	public int currentBackupCount;	// Default: 1
 	
 	public void onEnable() {
 		pdfFile = this.getDescription();
+		pluginName = pdfFile.getName();
 		
 		// Load configuration
 		config = getConfiguration();
 		runPeriodMins = config.getInt("runPeriodMins", 720);
 		numBackups = config.getInt("numBackups", 0);
-		backupPath = config.getString("backupPath", "plugins/Tectonigrated/backups");
+		backupPath = config.getString("backupPath", "plugins/" + pluginName + "/backups");
+		broadcastMessage = config.getString("broadcastMessage", "");
 		currentBackupCount = config.getInt("currentBackupCount", 1);
 		config.save();
 		
@@ -53,13 +59,13 @@ public class Tectonigrated extends JavaPlugin {
 		PluginManager pm = this.getServer().getPluginManager();
 		pm.registerEvent(Event.Type.CUSTOM_EVENT, tICustomEventListener, Event.Priority.Normal, this);
 		
-		// Schedule the renders
+		//TODO: Schedule the renders
 		//long period = 200;
 		//this.getServer().getScheduler().scheduleSyncRepeatingTask(this, renderTask, period, period);
 		
 		// Show enabled message
 		infoLog("Version " + pdfFile.getVersion() + " enabled.");
-		dbgOut(runPeriodMins + " " + numBackups + " " + backupPath);
+		dbgOut(runPeriodMins + " " + numBackups + " " + backupPath + " " + broadcastMessage + " " + currentBackupCount);
 	}
 	
 	// Render the map on command.
@@ -91,11 +97,28 @@ public class Tectonigrated extends JavaPlugin {
 	}
 	
 	/**
+	 * Broadcasts a message to all players.
+	 * @param msg Message to broadcast.
+	 */
+	public void broadcast(String msg) {
+		this.getServer().broadcastMessage(pluginName + ": " + msg);
+	}
+	
+	/**
 	 * Logs a message at level INFO.
 	 * @param msg Message to log.
 	 */
 	public void infoLog(String msg) {
-		log.info(pdfFile.getName() + ": " + msg);
+		log.info(pluginName + ": " + msg);
+	}
+	
+	/**
+	 * Logs an info message and broadcasts it.
+	 * @param msg Message to log and broadcast.
+	 */
+	public void logCast(String msg) {
+		infoLog(msg);
+		broadcast(msg);
 	}
 	
 	/**
@@ -103,7 +126,7 @@ public class Tectonigrated extends JavaPlugin {
 	 * @param msg Message to log.
 	 */
 	public void warnLog(String msg) {
-		log.warning(pdfFile.getName() + ": " + msg);
+		log.warning(pluginName + ": " + msg);
 	}
 	
 	/**
@@ -111,7 +134,7 @@ public class Tectonigrated extends JavaPlugin {
 	 * @param msg Message to log.
 	 */
 	public void errLog(String msg) {
-		log.severe(pdfFile.getName() + ": " + msg);
+		log.severe(pluginName + ": " + msg);
 	}
 	
 	/**
@@ -120,7 +143,8 @@ public class Tectonigrated extends JavaPlugin {
 	 */
 	public void dbgOut(String msg) {
 		if(DEBUG) {
-			log.warning("DEBUG: " + msg);
+			log.warning("DEBUG: '" + msg + "'");
+			this.getServer().broadcastMessage(ChatColor.RED + "DEBUG: '" + msg + "'");
 		}
 	}
 	

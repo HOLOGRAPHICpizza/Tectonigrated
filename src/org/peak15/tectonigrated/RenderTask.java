@@ -14,8 +14,13 @@ public class RenderTask implements Runnable {
 	
 	@Override
 	public void run() {
-		plugin.dbgOut("Rendering teh map lulz");
-		plugin.dbgOut("Btw bro, this thread blocks.");
+		plugin.renderInProgress = true;
+		
+		//TODO: Get actual backup count.
+		int backupCount = 1337;
+		plugin.logCast("Render number " + backupCount + " started.");
+		
+		//TODO: save all and disable level saving
 		
 		Thread bw = new Thread(backupWorker);
 		bw.start();
