@@ -1,0 +1,74 @@
+<tectonicus version="2">
+	
+	<config mode = "cmd"
+			outputDir = "plugins/Tectonigrated/map"
+			
+			outputHtmlName = "index.html"
+			minecraftJar = "plugins/Tectonigrated/minecraft.jar"
+
+			numZoomLevels = "6"
+			
+			spawnInitiallyVisible = "true"
+			playersInitiallyVisible = "true"
+			bedsInitiallyVisible = "false"
+			signsInitiallyVisible = "true"
+			portalsInitiallyVisible = "true"
+			
+			numDownsampleThreads = "2"
+			eraseOutputDir = "false"
+			useCache = "true"
+			cacheDir = "plugins/Tectonigrated/cache"
+			logFile = "plugins/Tectonigrated/tectonicus.log"
+	>
+	</config>
+	
+	<!-- Rasteriser config applies to all layers -->
+	<rasteriser type = "lwjgl"
+		colourDepth = "24"
+		alphaBits = "8"
+		numSamples = "2"
+		tileSize = "512"
+	>
+	</rasteriser>
+	
+	<!-- Maps to process (must have at least one map) -->
+	
+	<!-- Tectonigrated Note:
+			World directories are always copied to <backupPath>/current/<world-name> for rendering.
+			After rendering the "current" directory is renamed to the render number.
+			(If backups are enabled, otherwise the directory is deleted.)-->
+	<map name="Terra"
+		 cameraAngle="45"
+		 cameraElevation="30"
+		 closestZoomSize="38"
+		 worldDir="plugins/Tectonigrated/backups/current/world"
+		 dimension="terra"
+		 useBiomeColours="false"
+		>
+		
+		<!-- Markers to export for this map -->
+		<signs filter="special" />
+		<players filter="all" initiallyVisible="true" />
+		<portals filter="all" initiallyVisible="true" />
+		<spawn show="true" intiallyVisible="true" />
+		
+		<!-- Layers to draw for this map (must have at least one layer) -->
+		<layer name="Day"
+			lighting="day"
+			imageFormat="jpg"
+			imageCompressionLevel="0.85"
+		/>
+	</map>
+	
+	<!-- Tweeks that you shouldn't need but work around quirks on some machines -->
+	<tweeks
+		extractLwjglNatives = "true"
+		forceLoadAwt = "false"
+		force32BitNatives = "false"
+		force64BitNatives = "true"
+	>
+	</tweeks>
+	
+	<!-- Debug options, you shouldn't need to tinker with these -->
+	<debug maxTiles = "-1"></debug>
+</tectonicus>

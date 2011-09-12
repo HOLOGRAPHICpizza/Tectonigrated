@@ -3,6 +3,7 @@ package org.peak15.tectonigrated;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.io.*;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -13,6 +14,7 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
+
 public class Tectonigrated extends JavaPlugin {
 	// Enable debug messages.
 	public static final boolean DEBUG = true;
@@ -29,7 +31,7 @@ public class Tectonigrated extends JavaPlugin {
 	// User defined variables:
 	
 	// Period in minutes between automatic runs of Tectonigrated. 0 disables auto-runs.
-	public int runPeriodMins;		// Default: 720 mins (12 hrs)
+	public int runPeriodMins;		// Default: 0
 	
 	// Number of backups to keep. -1 keeps all backups.
 	public int numBackups;			// Default: 0
@@ -44,7 +46,10 @@ public class Tectonigrated extends JavaPlugin {
 	public int currentBackupCount;	// Default: 0
 	
 	// List of maps to render.
-	public List<String> renderMaps;	// Default: ["world"]
+	public List<String> renderMaps;	// Default: [world, world_nether]
+	
+	// Command line to run Tectonicus with.
+	public String tectonicusCmd;	// Default: "java -jar plugins/Tectonigrated/Tectonicus_v2.02.jar config=plugins/Tectonigrated/tectonicus.xml"
 	
 	public void onEnable() {
 		pdfFile = this.getDescription();
@@ -59,6 +64,7 @@ public class Tectonigrated extends JavaPlugin {
 		backupPath = config.getString("backupPath", "plugins/" + pluginName + "/backups");
 		broadcastMessage = config.getString("broadcastMessage", "");
 		currentBackupCount = config.getInt("currentBackupCount", 0);
+		tectonicusCmd = config.getString("tectonicusCmd", "java -jar plugins/Tectonigrated/Tectonicus_v2.02.jar config=plugins/Tectonigrated/tectonicus.xml");
 		
 		List<String> rMaps = new ArrayList<String>();
 		rMaps.add("world");
@@ -67,6 +73,30 @@ public class Tectonigrated extends JavaPlugin {
 		
 		config.setProperty("renderMaps", renderMaps);
 		config.save();
+		
+		// Check for default files
+		File configExamples = new File("plugins/" + pluginName + "/config-examples.yml");
+		File readme = new File("plugins/" + pluginName + "/readme.txt");
+		File tectonicusXml = new File("plugins/" + pluginName + "/tectonicus.xml");
+		
+		try {
+			if(!configExamples.exists()) {
+				InputStream src = this.getClass().getResourceAsStream("/org/peak15/tectonigrated/resources/config-examples.yml");
+				streamToFile(src, configExamples);
+			}
+			if(!readme.exists()) {
+				InputStream src = this.getClass().getResourceAsStream("/org/peak15/tectonigrated/resources/readme.txt");
+				streamToFile(src, readme);
+			}
+			if(!tectonicusXml.exists()) {
+				InputStream src = this.getClass().getResourceAsStream("/org/peak15/tectonigrated/resources/tectonicus.xml");
+				streamToFile(src, tectonicusXml);
+			}
+		} catch(IOException e) {
+			errLog("Failed to create default files.");
+			e.printStackTrace();
+			return;
+		}
 		
 		// Catch custom events
 		PluginManager pm = this.getServer().getPluginManager();
@@ -112,6 +142,25 @@ public class Tectonigrated extends JavaPlugin {
 			}
 		}
 		return false;
+	}
+	
+	/**
+	 * Copies a stream to a file.
+	 * @param src Source stream.
+	 * @param dest Destination file.
+	 * @throws IOException
+	 */
+	public void streamToFile(InputStream in, File dest) throws IOException {
+		OutputStream out = new FileOutputStream(dest);
+		
+		// Copy the bits from instream to outstream
+		byte[] buf = new byte[1024];
+		int len;
+		while ((len = in.read(buf)) > 0) {
+			out.write(buf, 0, len);
+		}
+		in.close();
+		out.close();
 	}
 	
 	/**

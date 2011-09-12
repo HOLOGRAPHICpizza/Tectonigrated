@@ -20,7 +20,7 @@ public class BackupWorker implements Runnable {
 		// Backup the worlds
 		for(String world : plugin.renderMaps) {
 			File src = new File(world);
-			File dest = new File(plugin.backupPath, Integer.toString(plugin.currentBackupCount) + File.separator + world);
+			File dest = new File(plugin.backupPath, "current/" + world);
 			try {
 				dest.mkdirs();
 				copyDirectory(src, dest);
