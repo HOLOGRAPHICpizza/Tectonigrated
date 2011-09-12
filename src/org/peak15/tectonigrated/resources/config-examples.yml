@@ -1,0 +1,33 @@
+# This is used internally by Tectonigrated to number backups.
+# Do not modify this.
+currentBackupCount: 0
+
+# This message is broadcast to players after the map is rendered.
+# '' broadcasts no message.
+# For example:
+# broadcastMessage: Check out the map online at http://www.coolserver.com/map
+broadcastMessage: ''
+
+# Tectonigrated will run every this many minutes.
+# 0 disables auto-runs.
+runPeriodMins: 0
+
+# Command line to run Tectonicus with.
+# This currently supports quotes, but not escape characters.
+tectonicusCmd: java -jar plugins/Tectonigrated/Tectonicus_v2.02.jar config=plugins/Tectonigrated/tectonicus.xml
+
+# Worlds to copy to the "current" backup directory for rendering.
+# The actual maps that are rendered are specifed in tectonicus.xml.
+renderMaps:
+- world
+- world_nether
+
+# The number of latest backups to keep.
+# 0 disables keeping backups.
+# -1 keeps all backups.
+numBackups: 0
+
+# The path to copy worlds to for rendering.
+# Even if keeping backups is disabled, worlds will still be temporarily copied to this directory.
+# Make sure it has sufficient space.
+backupPath: plugins/Tectonigrated/backups

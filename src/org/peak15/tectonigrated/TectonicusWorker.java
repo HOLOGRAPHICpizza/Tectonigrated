@@ -4,13 +4,16 @@
 package org.peak15.tectonigrated;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.comparator.NameFileComparator;
 import org.bukkit.ChatColor;
 
 public class TectonicusWorker implements Runnable {
@@ -56,8 +59,27 @@ public class TectonicusWorker implements Runnable {
 			return;
 		}
 		
-		//TODO: rename current to render number
-		//TODO: remove old backups to conform with numBackups
+		// rename current to render number
+		File current = new File(plugin.backupPath, "current");
+		File num = new File(plugin.backupPath, Integer.toString(plugin.currentBackupCount));
+		current.renameTo(num);
+		
+		// remove old backups to conform with numBackups
+		if(plugin.numBackups > -1) {
+			File backups = new File(plugin.backupPath);
+			File[] files = backups.listFiles();
+			Arrays.sort(files, NameFileComparator.NAME_REVERSE);
+			
+			int fileCount = 0;
+			for(File file : files) {
+				fileCount++;
+				
+				if(fileCount > plugin.numBackups) {
+					// delete the backup
+					deleteDir(file);
+				}
+			}
+		}
 		
 		plugin.logCast("Render complete.");
 		if(!plugin.broadcastMessage.equals("")) {
@@ -90,5 +112,26 @@ public class TectonicusWorker implements Runnable {
 		}
 		
 		return matchList;
+	}
+	
+	/**
+	 * Recursively delete a directory.
+	 * Ninja'd from: http://www.exampledepot.com/egs/java.io/DeleteDir.html
+	 * @param dir Directory to recursively delete.
+	 * @return True if successful, false otherwise.
+	 */
+	public static boolean deleteDir(File dir) {
+		if (dir.isDirectory()) {
+			String[] children = dir.list();
+			for (int i=0; i<children.length; i++) {
+				boolean success = deleteDir(new File(dir, children[i]));
+				if (!success) {
+					return false;
+				}
+			}
+		}
+		
+		// The directory is now empty so delete it
+		return dir.delete();
 	}
 }

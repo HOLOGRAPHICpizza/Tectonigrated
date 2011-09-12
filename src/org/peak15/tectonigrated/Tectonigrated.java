@@ -15,9 +15,17 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
 
+/**
+ * Tectonicus integration for Bukkit.
+ * 
+ * Released under the MIT License.
+ * Apache components released under the Apache License.
+ * 
+ * @author HOLOGRAPHICpizza (Michael Craft - mcraft@peak15.org)
+ */
 public class Tectonigrated extends JavaPlugin {
-	// Enable debug messages.
-	public static final boolean DEBUG = true;
+	// Toggle debug messages.
+	public static final boolean DEBUG = false;
 	
 	public boolean renderInProgress = false;
 	
@@ -43,6 +51,7 @@ public class Tectonigrated extends JavaPlugin {
 	public String broadcastMessage;	// Default: ""
 	
 	// Current backup number, should not be changed by user.
+	//TODO: Scan the backup directory for the latest backup number instead.
 	public int currentBackupCount;	// Default: 0
 	
 	// List of maps to render.
@@ -59,7 +68,7 @@ public class Tectonigrated extends JavaPlugin {
 		config = getConfiguration();
 		config.load();
 		
-		runPeriodMins = config.getInt("runPeriodMins", 720);
+		runPeriodMins = config.getInt("runPeriodMins", 0);
 		numBackups = config.getInt("numBackups", 0);
 		backupPath = config.getString("backupPath", "plugins/" + pluginName + "/backups");
 		broadcastMessage = config.getString("broadcastMessage", "");
@@ -102,9 +111,9 @@ public class Tectonigrated extends JavaPlugin {
 		PluginManager pm = this.getServer().getPluginManager();
 		pm.registerEvent(Event.Type.CUSTOM_EVENT, tICustomEventListener, Event.Priority.Normal, this);
 		
-		//TODO: Schedule the renders
-		//long period = 200;
-		//this.getServer().getScheduler().scheduleSyncRepeatingTask(this, renderTask, period, period);
+		// Schedule the renders
+		long period = runPeriodMins * 1200; // runPeriodMins * 60 sec per min * 20 ticks per sec
+		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, renderTask, period, period);
 		
 		// Show enabled message
 		infoLog("Version " + pdfFile.getVersion() + " enabled.");

@@ -1,47 +1,54 @@
 package org.peak15.tectonigrated.test;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.io.File;
+import java.util.Arrays;
+
+import org.apache.commons.io.comparator.NameFileComparator;
 
 public class Test {
-	@SuppressWarnings("unused")
 	public static void main(String[] args) {
-		String cmd = "java -jar plugins/Tectonigrated/Tectonicus_v2.02.jar config=\"plugins/Tecton igrated/tectonicus.xml\"";
-		List<String> list = parseArgs(cmd);
+		// rename current to render number
+		File current = new File("E:\\minecraft_server\\plugins\\Tectonigrated\\backups", "current");
+		File num = new File("E:\\minecraft_server\\plugins\\Tectonigrated\\backups", Integer.toString(30));
+		current.renameTo(num);
 		
-		try {
-			Thread.sleep(1);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		// remove old backups to conform with numBackups
+		if(2 > -1) {
+			File backups = new File("E:\\minecraft_server\\plugins\\Tectonigrated\\backups");
+			File[] files = backups.listFiles();
+			Arrays.sort(files, NameFileComparator.NAME_REVERSE);
+			
+			int fileCount = 0;
+			for(File file : files) {
+				fileCount++;
+				
+				if(fileCount > 2) {
+					// delete the backup
+					deleteDir(file);
+				}
+			}
 		}
 	}
 	
 	/**
-	 * Parses a command line into it's arguments, respecting quotes. Does not respect escapes.
-	 * @param args Command line to parse.
-	 * @return The list of arguments.
+	 * Recursively delete a directory.
+	 * Ninja'd from: http://www.exampledepot.com/egs/java.io/DeleteDir.html
+	 * @param dir Directory to recursively delete.
+	 * @return True if successful, false otherwise.
 	 */
-	public static List<String> parseArgs(String args) {
-		List<String> matchList = new ArrayList<String>();
-		Pattern regex = Pattern.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");
-		Matcher regexMatcher = regex.matcher(args);
-		while (regexMatcher.find()) {
-			if (regexMatcher.group(1) != null) {
-				// Add double-quoted string without the quotes
-				matchList.add(regexMatcher.group(1));
-			} else if (regexMatcher.group(2) != null) {
-				// Add single-quoted string without the quotes
-				matchList.add(regexMatcher.group(2));
-			} else {
-				// Add unquoted word
-				matchList.add(regexMatcher.group());
+	public static boolean deleteDir(File dir) {
+		if (dir.isDirectory()) {
+			String[] children = dir.list();
+			for (int i=0; i<children.length; i++) {
+				boolean success = deleteDir(new File(dir, children[i]));
+				if (!success) {
+					return false;
+				}
 			}
 		}
 		
-		return matchList;
+		// The directory is now empty so delete it
+		return dir.delete();
 	}
-
+	
 }
