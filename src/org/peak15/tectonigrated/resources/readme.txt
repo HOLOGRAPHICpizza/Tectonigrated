@@ -1,5 +1,5 @@
-Tectonigrated v1.0
-Tectonicus integration for Bukkit.
+Tectonigrated v1.1
+Tectonicus integration and automated backup system for Bukkit.
 by HOLOGRAPHICpizza (Michael Craft - mcraft@peak15.org)
 
 Released under the MIT License.

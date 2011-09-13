@@ -3,7 +3,7 @@ main: org.peak15.tectonigrated.Tectonigrated
 version: 1.0
 author: HOLOGRAPHICpizza (Michael Craft - mcraft@peak15.org)
 description: >
-             Tectonicus integration for Bukkit.
+             Tectonicus integration and automated backup system for Bukkit.
 commands:
   rendermap:
     description: Starts a map render.

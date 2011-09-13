@@ -16,7 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
 
 /**
- * Tectonicus integration for Bukkit.
+ * Tectonicus integration and automated backup system for Bukkit.
  * 
  * Released under the MIT License.
  * Apache components released under the Apache License.
