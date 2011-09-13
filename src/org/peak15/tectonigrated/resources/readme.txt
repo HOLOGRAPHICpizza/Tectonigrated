@@ -1,4 +1,4 @@
-Tectonigrated v1.1
+Tectonigrated v1.2
 Tectonicus integration and automated backup system for Bukkit.
 by HOLOGRAPHICpizza (Michael Craft - mcraft@peak15.org)
 

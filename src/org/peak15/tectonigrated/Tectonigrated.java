@@ -112,8 +112,10 @@ public class Tectonigrated extends JavaPlugin {
 		pm.registerEvent(Event.Type.CUSTOM_EVENT, tICustomEventListener, Event.Priority.Normal, this);
 		
 		// Schedule the renders
-		long period = runPeriodMins * 1200; // runPeriodMins * 60 sec per min * 20 ticks per sec
-		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, renderTask, period, period);
+		if(runPeriodMins > 0) {
+			long period = runPeriodMins * 1200; // runPeriodMins * 60 sec per min * 20 ticks per sec
+			this.getServer().getScheduler().scheduleSyncRepeatingTask(this, renderTask, period, period);
+		}
 		
 		// Show enabled message
 		infoLog("Version " + pdfFile.getVersion() + " enabled.");
