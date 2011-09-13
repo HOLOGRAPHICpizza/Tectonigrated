@@ -1,0 +1,31 @@
+{{http://dev.bukkit.org/media/images/34/49/tectonigrated_icon.png}}
+== Tectonigrated ==
+**Tectonicus integration and automated backup system for Bukkit.**
+
+Tectonigrated renders maps with [[http://triangularpixels.net/games/tectonicus/|Tectonicus]] and optionally keeps backups of worlds automatically on a schedule, or manually on command.
+
+=== Features ===
+* Renders any number of worlds with Tectonicus.
+* Renders can be scheduled to run automatically, or manually by command.
+* Backups of worlds can be saved automatically.
+* Old backups can be automatically deleted to save disk space.
+* A custom message can be broadcast after the render is complete.
+
+=== Setup ===
+# Place Tectonigrated.jar in your plugins folder and run Bukkit to generate the initial configuration files.
+# Place a Tectonicus jar file in the Tectonigrated folder.
+# Place a minecraft.jar file in the Teconigrated folder.
+# Configure config.yml. [[http://dev.bukkit.org/server-mods/tectonigrated/pages/example-configuration/|Example Configuration]]
+# Configure tectonicus.xml. Sane defaults are in place, but your configuration will likely be much different. See examples from the Tectonicus site for help with this.
+
+=== Use ===
+Use the command **/rendermap** to render maps of the configured worlds to the configured folder, or wait for the your scheduled period of minutes to elapse and the maps will be rendered automatically.
+
+Backups of the worlds may also be saved, as per your settings.
+
+A user must be an OP, console, or have the ##tectonigrated.render## permission to run the command.
+
+{{http://dev.bukkit.org/media/images/34/50/tectonigrated_chat.png}}
+
+=== Future Features ===
+* Ability to automatically upload the map to a webserver.

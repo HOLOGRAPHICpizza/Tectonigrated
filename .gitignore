@@ -1,1 +1,30 @@
+# Eclipse stuff
+/.classpath
+/.project
+/.settings
+
+# netbeans
+/nbproject
+
+# various other potential build files
+/build
 /bin
+/dist
+/manifest.mf
+/build.xml
+/target
+
+# vim
+.*.sw[a-p]
+
+# Mac filesystem dust
+*.DS_Store
+
+# intellij
+*.iml
+*.ipr
+*.iws
+.idea/
+
+/manifest.txt
+/Tectonigrated.jardesc
