@@ -1,6 +1,6 @@
 name: Tectonigrated
 main: org.peak15.tectonigrated.Tectonigrated
-version: 1.0
+version: 1.1
 author: HOLOGRAPHICpizza (Michael Craft - mcraft@peak15.org)
 description: >
              Tectonicus integration and automated backup system for Bukkit.
